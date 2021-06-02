@@ -6,9 +6,11 @@ class Temple {
     address,
     timings,
     imageUrl,
+    distance,
     details,
     isGlutenFree,
     isVegan,
+    status,
     isVegetarian,
     isLactoseFree
   ) {
@@ -18,10 +20,12 @@ class Temple {
     this.address = address;
     this.timings = timings;
     this.imageUrl = imageUrl;
+    this.distance = distance;
 
     this.details = details;
     this.isGlutenFree = isGlutenFree;
     this.isVegan = isVegan;
+    this.status = status;
     this.isVegetarian = isVegetarian;
     this.isLactoseFree = isLactoseFree;
   }

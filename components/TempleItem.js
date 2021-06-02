@@ -45,6 +45,7 @@ const TempleItem = (props) => {
         <ListItem.Content>
           <ListItem.Title>{props.title}</ListItem.Title>
           <ListItem.Subtitle>{props.address}</ListItem.Subtitle>
+          <ListItem.Subtitle>{props.status}</ListItem.Subtitle>
         </ListItem.Content>
         <ListItem.Chevron />
       </ListItem>
