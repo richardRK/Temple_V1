@@ -8,7 +8,14 @@ const Drawer = createDrawerNavigator();
 const Drawer1 = (props) => {
   return (
     <Drawer.Navigator>
-      <Drawer.Screen name="Home" component={Stack1} />
+      <Drawer.Screen
+        options={(navigation) => {
+
+          navigation.navigation.navigate("Categories")
+        }}
+        name="Home"
+        component={Stack1}
+      />
     </Drawer.Navigator>
   );
 };

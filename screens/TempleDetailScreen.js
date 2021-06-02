@@ -1,117 +1,238 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 
-import { ScrollView, View, Image, Text, StyleSheet } from "react-native";
-import { HeaderButtons, Item } from "react-navigation-header-buttons";
-import { useSelector, useDispatch } from "react-redux";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Animated,
+  ScrollView,
+  Image,
+  Dimensions,
+} from "react-native";
 
-import HeaderButton from "../components/HeaderButton";
-import DefaultText from "../components/DefaultText";
-import { toggleFavorite } from "../store/actions/temples";
+const { width } = Dimensions.get("window");
 
-const ListItem = (props) => {
-  return (
-    <View style={styles.listItem}>
-      <DefaultText>{props.children}</DefaultText>
-    </View>
-  );
-};
+class TempleDetailScreen extends Component {
+  state = {
+    active: 0,
+    xTabOne: 0,
+    xTabTwo: 0,
+    translateX: new Animated.Value(0),
+    translateXTabOne: new Animated.Value(0),
+    translateXTabTwo: new Animated.Value(width),
+    translateY: -1000,
+  };
 
-const TempleDetailScreen = (props) => {
-  const availableTemples = useSelector((state) => state.temples.temples);
+  handleSlide = (type) => {
+    let {
+      active,
+      xTabOne,
+      xTabTwo,
+      translateX,
+      translateXTabOne,
+      translateXTabTwo,
+    } = this.state;
+    Animated.spring(translateX, {
+      toValue: type,
+      duration: 300,
+    }).start();
+    if (active === 0) {
+      Animated.parallel([
+        Animated.spring(translateXTabOne, {
+          toValue: 0,
+          duration: 300,
+        }).start(),
+        Animated.spring(translateXTabTwo, {
+          toValue: width,
+          duration: 300,
+        }).start(),
+      ]);
+    } else {
+      Animated.parallel([
+        Animated.spring(translateXTabOne, {
+          toValue: -width,
+          duration: 300,
+        }).start(),
+        Animated.spring(translateXTabTwo, {
+          toValue: 0,
+          duration: 300,
+        }).start(),
+      ]);
+    }
+  };
+  constructor(props) {
+    super(props);
+  }
 
-  const templeId = props.route.params.param1;
+  render() {
+    let {
+      xTabOne,
+      xTabTwo,
+      translateX,
+      active,
+      translateXTabOne,
+      translateXTabTwo,
+      translateY,
+    } = this.state;
 
-  const currenttempleIsFavorite = useSelector((state) =>
-    state.temples.favoriteTemples.some((temple) => temple.id === templeId)
-  );
+    return (
+      <View style={{ flex: 1 }}>
+        <View
+          style={{
+            width: "90%",
+            marginLeft: "auto",
+            marginRight: "auto",
+          }}
+        >
+          <View
+            style={{
+              flexDirection: "row",
+              marginTop: 40,
+              marginBottom: 20,
+              height: 36,
+              position: "relative",
+            }}
+          >
+            <Animated.View
+              style={{
+                position: "absolute",
+                width: "50%",
+                height: "100%",
+                top: 0,
+                left: 0,
+                backgroundColor: "#007aff",
+                borderRadius: 4,
+                transform: [
+                  {
+                    translateX,
+                  },
+                ],
+              }}
+            />
+            <TouchableOpacity
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+                borderWidth: 1,
+                borderColor: "#007aff",
+                borderRadius: 4,
+                borderRightWidth: 0,
+                borderTopRightRadius: 0,
+                borderBottomRightRadius: 0,
+              }}
+              onLayout={(event) =>
+                this.setState({
+                  xTabOne: event.nativeEvent.layout.x,
+                })
+              }
+              onPress={() =>
+                this.setState({ active: 0 }, () => this.handleSlide(xTabOne))
+              }
+            >
+              <Text
+                style={{
+                  color: active === 0 ? "#fff" : "#007aff",
+                }}
+              >
+                Tab One
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+                borderWidth: 1,
+                borderColor: "#007aff",
+                borderRadius: 4,
+                borderLeftWidth: 0,
+                borderTopLeftRadius: 0,
+                borderBottomLeftRadius: 0,
+              }}
+              onLayout={(event) =>
+                this.setState({
+                  xTabTwo: event.nativeEvent.layout.x,
+                })
+              }
+              onPress={() =>
+                this.setState({ active: 1 }, () => this.handleSlide(xTabTwo))
+              }
+            >
+              <Text
+                style={{
+                  color: active === 1 ? "#fff" : "#007aff",
+                }}
+              >
+                Tab Two
+              </Text>
+            </TouchableOpacity>
+          </View>
 
-  const selectedtemple = availableTemples.find(
-    (temple) => temple.id === templeId
-  );
+          <ScrollView>
+            <Animated.View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                transform: [
+                  {
+                    translateX: translateXTabOne,
+                  },
+                ],
+              }}
+              onLayout={(event) =>
+                this.setState({
+                  translateY: event.nativeEvent.layout.height,
+                })
+              }
+            >
+              <Text>Hi, I am a cute cat</Text>
+              <View style={{ marginTop: 20 }}>
+                <Image
+                  source={require("../assets/imgs/bg16.jpg")}
+                  style={{
+                    width: 30,
+                    height: 30,
+                    borderRadius: 15,
+                  }}
+                />
+              </View>
+            </Animated.View>
 
-  const dispatch = useDispatch();
-
-  const toggleFavoriteHandler = useCallback(() => {
-    dispatch(toggleFavorite(templeId));
-  }, [dispatch, templeId]);
-
-  useEffect(() => {
-    // props.navigation.setParams({ templeTitle: selectedtemple.title });
-    props.navigation.setParams({ toggleFav: toggleFavoriteHandler });
-  }, [toggleFavoriteHandler]);
-
-  useEffect(() => {
-    props.navigation.setParams({ isFav: currenttempleIsFavorite });
-  }, [currenttempleIsFavorite]);
-
-  return (
-    <ScrollView>
-      <Image source={selectedtemple.imageUrl} style={styles.image} />
-      <View style={styles.details}>
-        <DefaultText>{selectedtemple.details}</DefaultText>
-        {/* <DefaultText>{selectedtemple.duration}m</DefaultText>
-        <DefaultText>{selectedtemple.complexity.toUpperCase()}</DefaultText>
-        <DefaultText>{selectedtemple.affordability.toUpperCase()}</DefaultText> */}
+            <Animated.View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                transform: [
+                  {
+                    translateX: translateXTabTwo,
+                  },
+                  {
+                    translateY: -translateY,
+                  },
+                ],
+              }}
+            >
+              <Text>Hi, I am a cute dog</Text>
+              <View style={{ marginTop: 20 }}>
+                <Image
+                  source={require("../assets/imgs/bg16.jpg")}
+                  style={{
+                    width: 30,
+                    height: 30,
+                    borderRadius: 15,
+                  }}
+                />
+              </View>
+            </Animated.View>
+          </ScrollView>
+        </View>
       </View>
-      {/* <Text style={styles.title}>Ingredients</Text>
-      {selectedtemple.ingredients.map((ingredient) => (
-        <ListItem key={ingredient}>{ingredient}</ListItem>
-      ))}
-      <Text style={styles.title}>Steps</Text>
-      {selectedtemple.steps.map((step) => (
-        <ListItem key={step}>{step}</ListItem>
-      ))} */}
-    </ScrollView>
-  );
-};
+    );
+  }
+}
 
 TempleDetailScreen.propTypes = {};
-
-TempleDetailScreen.navigationOptions = (navigationData) => {
-  const i2 = navigationData;
-
-  //   const templeId = navigationData.navigation.getParam("templeId");
-  //   const templeTitle = navigationData.navigation.getParam("templeTitle");
-  //   const toggleFavorite = navigationData.navigation.getParam("toggleFav");
-  //   const isFavorite = navigationData.navigation.getParam("isFav");
-
-  //   //const selectedtemple = templeS.find((temple) => temple.id === templeId);
-  //   return {
-  //     headerTitle: templeTitle,
-  //     headerRight: (
-  //       <HeaderButtons HeaderButtonComponent={HeaderButton}>
-  //         <Item
-  //           title="Favorite"
-  //           iconName={isFavorite ? "ios-star" : "ios-star-outline"}
-  //           onPress={toggleFavorite}
-  //         />
-  //       </HeaderButtons>
-  //     ),
-  //   };
-};
-
-const styles = StyleSheet.create({
-  image: {
-    width: "100%",
-    height: 200,
-  },
-  details: {
-    flexDirection: "row",
-    padding: 15,
-    justifyContent: "space-around",
-  },
-  title: {
-    fontFamily: "open-sans-bold",
-    fontSize: 22,
-    textAlign: "center",
-  },
-  listItem: {
-    marginVertical: 10,
-    marginHorizontal: 20,
-    borderColor: "#ccc",
-    borderWidth: 1,
-    padding: 10,
-  },
-});
 
 export default TempleDetailScreen;
