@@ -17,9 +17,9 @@ const Stack1 = (props) => {
   return (
     <Stack.Navigator
       initialRouteName="Categories"
-      screenOptions={{
-        headerShown: false,
-      }}
+      // screenOptions={{
+      //   headerShown: false,
+      // }}
     >
       <Stack.Screen name="Categories" component={CategoriesScreen} />
       <Stack.Screen name="CategoryTemples" component={CategoryTempleScreen} />

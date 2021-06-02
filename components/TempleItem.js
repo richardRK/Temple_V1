@@ -5,15 +5,62 @@ import {
   StyleSheet,
   TouchableOpacity,
   ImageBackground,
+  FlatList,
 } from "react-native";
+
+import { Card, ListItem, Button, Icon, Avatar } from "react-native-elements";
+import { TEMPLES } from "../data/dummy-data";
 
 import DefaultText from "./DefaultText";
 
+const users = [
+  {
+    name: "brynn",
+    avatar: "https://s3.amazonaws.com/uifaces/faces/twitter/brynn/128.jpg",
+  },
+];
+
+const keyExtractor = (item, index) => index.toString();
+
 const TempleItem = (props) => {
+
+  
+  const list = [
+    {
+      name: "Amy Farha",
+      avatar_url: require("../assets/imgs/bg28.jpg"),
+      subtitle: "Vice President",
+    },
+    {
+      name: "Chris Jackson",
+      avatar_url: require("../assets/imgs/bg28.jpg"),
+      subtitle: "Vice Chairman",
+    },
+  ];
+
+  const renderItem = (props) => (
+    <View style={{ ...styles.mealRow, ...styles.mealHeader }}>
+      <ListItem bottomDivider>
+        <Avatar source={props.imageUrl} />
+        <ListItem.Content>
+          <ListItem.Title>{props.title}</ListItem.Title>
+          <ListItem.Subtitle>{props.address}</ListItem.Subtitle>
+        </ListItem.Content>
+        <ListItem.Chevron />
+      </ListItem>
+    </View>
+  );
+
   return (
     <View style={styles.templeItem}>
       <TouchableOpacity onPress={props.onSelectMeal}>
-        <View>
+        <FlatList
+          keyExtractor={keyExtractor}
+          data={TEMPLES}
+          renderItem={renderItem}
+        />
+
+        {/* <View>
           <View style={{ ...styles.mealRow, ...styles.mealHeader }}>
             <ImageBackground source={props.imageUrl} style={styles.bgImage}>
               <View style={styles.titleContainer}>
@@ -26,10 +73,8 @@ const TempleItem = (props) => {
           <View style={{ ...styles.mealRow, ...styles.mealDetail }}>
             <DefaultText>{props.address}</DefaultText>
             <DefaultText>{props.timings}</DefaultText>
-            {/* <DefaultText>{props.details}</DefaultText> */}
           </View>
-          
-        </View>
+        </View> */}
       </TouchableOpacity>
     </View>
   );
@@ -73,7 +118,6 @@ const styles = StyleSheet.create({
     alignSelf: "flex-end",
   },
   title: {
-
     flexDirection: "row",
     flexWrap: "wrap",
     fontFamily: "open-sans-bold",
