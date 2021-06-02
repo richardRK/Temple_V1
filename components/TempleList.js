@@ -27,9 +27,7 @@ const TempleList = (props) => {
           >
             <ListItem bottomDivider>
               <Avatar style={styles.bgImage} source={itemData.item.imageUrl} />
-              <View style={styles.distance}>
-                <ListItem.Subtitle>{itemData.item.distance}</ListItem.Subtitle>
-              </View>
+
               <ListItem.Content>
                 <ListItem.Title>{itemData.item.title}</ListItem.Title>
 
@@ -39,6 +37,9 @@ const TempleList = (props) => {
                 </ListItem.Subtitle>
               </ListItem.Content>
               <ListItem.Chevron />
+              <View style={styles.distance}>
+                <ListItem.Subtitle>{itemData.item.distance}</ListItem.Subtitle>
+              </View>
             </ListItem>
           </TouchableOpacity>
         </View>

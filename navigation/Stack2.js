@@ -7,12 +7,12 @@ const Stack = createStackNavigator();
 const Stack2 = (props) => {
   return (
     <Stack.Navigator
-      initialRouteName="GymIndex"
+      initialRouteName="Updates"
       // screenOptions={{
       //   headerShown: false,
       // }}
     >
-      <Stack.Screen name="GymIndex" component={FavoritesScreen} />
+      <Stack.Screen name="Updates" component={FavoritesScreen} />
     </Stack.Navigator>
   );
 };

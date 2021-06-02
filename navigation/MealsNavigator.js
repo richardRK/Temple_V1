@@ -45,7 +45,6 @@ const TopTabNavigator = createStackNavigator({
   },
 });
 
-
 const FavNavigator = createStackNavigator(
   {
     Favorites: FavoritesScreen,
@@ -101,9 +100,18 @@ const tabScreenConfig = {
   Meals2: {
     screen: TopTabNavigator,
     path: "",
-    navigationOptions: {
+    navigationOptions: (props) => ({
       tabBarIcon: (tabInfo) => {
-        return <Ionicons name="home" size={20} color={tabInfo.tintColor} />;
+        return (
+          <Ionicons
+            name="home"
+            size={20}
+            onPress={() => {
+              props.navigation.navigate("Categories");
+            }}
+            color={tabInfo.tintColor}
+          />
+        );
       },
       tabBarColor: Colors.primaryColor,
       // tabBarVisible:false,
@@ -113,7 +121,7 @@ const tabScreenConfig = {
         ) : (
           "Home"
         ),
-    },
+    }),
   },
 
   Temples: {
@@ -212,7 +220,7 @@ const tabScreenConfig = {
         return <Ionicons name="ios-star" size={20} color={tabInfo.tintColor} />;
       },
       tabBarColor: Colors.accentColor,
-      tabBarVisible:true,
+      tabBarVisible: true,
       tabBarLabel:
         Platform.OS === "android" ? (
           <Text style={{ fontFamily: "open-sans-bold" }}>Favorites</Text>
@@ -267,8 +275,6 @@ const MainNavigator = createDrawerNavigator(
       },
     },
 
-    
-
     MealsFavs: {
       screen: MealsFavTabNavigator,
       // DefaultScreen: {
@@ -284,7 +290,7 @@ const MainNavigator = createDrawerNavigator(
 
     Filters: FiltersNavigator,
   },
-  
+
   {
     contentOptions: {
       activeTintColor: Colors.accentColor,
