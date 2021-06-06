@@ -1,13 +1,12 @@
 import React, { useState } from "react";
-
-import { StyleSheet, Text, View, ScrollView } from "react-native";
+import { StyleSheet, View, ScrollView } from "react-native";
 import SegmentedControl from "rn-segmented-control";
-
 import TempleDet1 from "../screens/TempleDet1";
 
-const TempleDetailScreen = (props) => {
-  const [tabIndex, setTabIndex] = React.useState(0);
 
+const TempleDetailScreen = (props) => {
+  
+  const [tabIndex, setTabIndex] = useState(0);
 
   const handleTabsChange = (index) => {
     setTabIndex(index);
@@ -17,7 +16,8 @@ const TempleDetailScreen = (props) => {
     <View style={styles.container}>
       <ScrollView>
         <View style={styles.textStyle}>
-          <SegmentedControl style={styles.text}
+          <SegmentedControl
+            style={styles.text}
             tabs={["Overview", "Pujas", "Contact", "Services"]}
             currentIndex={tabIndex}
             onChange={handleTabsChange}
@@ -29,30 +29,49 @@ const TempleDetailScreen = (props) => {
         </View>
 
         <View>
-          <TempleDet1 tabView={tabIndex} />
+          <TempleDet1 tabView={tabIndex} propInfo = {props} />
         </View>
       </ScrollView>
     </View>
   );
 };
 
+// TempleDetailScreen.navigationOptions = (navigationData) => {
+//   const templeId = navigationData.navigation.getParam("templeId");
+//   const templeTitle = navigationData.navigation.getParam("templeTitle");
+//   const toggleFavorite = navigationData.navigation.getParam("toggleFav");
+//   const isFavorite = navigationData.navigation.getParam("isFav");
+
+//   //const selectedtemple = templeS.find((temple) => temple.id === templeId);
+//   return {
+//     headerTitle: templeTitle,
+//     headerRight: (
+//       <HeaderButtons HeaderButtonComponent={HeaderButton}>
+//         <Item
+//           title="Favorite"
+//           iconName={isFavorite ? "ios-star" : "ios-star-outline"}
+//           onPress={toggleFavorite}
+//         />
+//       </HeaderButtons>
+//     ),
+//   };
+// };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     // fontSize: 11,
     // flex: 1,
-   
   },
   textStyle: {
-
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    alignItems: "center",
     elevation: 5,
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
     zIndex: 15,
-    overflow: 'hidden',
-    position: 'relative',
+    overflow: "hidden",
+    position: "relative",
     height: 42,
     // width: 350,
     // textAlign: "center",
