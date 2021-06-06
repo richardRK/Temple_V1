@@ -25,10 +25,6 @@ const TempleDetailScreen = (props) => {
             activeSegmentBackgroundColor="#0482f7"
             activeTextColor="white"
             textColor="black"
-            // paddingVertical={8}
-            // paddingHorizontal={8}
-
-            // style={styles.textStyle}
           />
         </View>
 
