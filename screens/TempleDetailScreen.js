@@ -1,16 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { StyleSheet, View, ScrollView } from "react-native";
 import SegmentedControl from "rn-segmented-control";
 import TempleDet1 from "../screens/TempleDet1";
 
+import { useSelector, useDispatch } from "react-redux";
+import { toggleFavorite } from "../store/actions/temples";
 
 const TempleDetailScreen = (props) => {
-  
   const [tabIndex, setTabIndex] = useState(0);
-
   const handleTabsChange = (index) => {
     setTabIndex(index);
   };
+
+  const availableTemples = useSelector((state) => state.temples.temples);
+  const templeId = props.route.params.param1;
+  const currenttempleIsFavorite = useSelector((state) =>
+    state.temples.favoriteTemples.some((temple) => temple.id === templeId)
+  );
+  const selectedtemple = availableTemples.find(
+    (temple) => temple.id === templeId
+  );
+  const dispatch = useDispatch();
+  const toggleFavoriteHandler = useCallback(() => {
+    dispatch(toggleFavorite(templeId));
+  }, [dispatch, templeId]);
+
+  useEffect(() => {
+    // props.navigation.setParams({ templeTitle: selectedtemple.title });
+    props.navigation.setParams({ toggleFav: toggleFavoriteHandler });
+  }, [toggleFavoriteHandler]);
+
+  useEffect(() => {
+    props.navigation.setParams({ isFav: currenttempleIsFavorite });
+  }, [currenttempleIsFavorite]);
 
   return (
     <View style={styles.container}>
@@ -29,33 +51,33 @@ const TempleDetailScreen = (props) => {
         </View>
 
         <View>
-          <TempleDet1 tabView={tabIndex} propInfo = {props} />
+          <TempleDet1 tabView={tabIndex} selectedTempleInfo={selectedtemple} />
         </View>
       </ScrollView>
     </View>
   );
 };
 
-// TempleDetailScreen.navigationOptions = (navigationData) => {
-//   const templeId = navigationData.navigation.getParam("templeId");
-//   const templeTitle = navigationData.navigation.getParam("templeTitle");
-//   const toggleFavorite = navigationData.navigation.getParam("toggleFav");
-//   const isFavorite = navigationData.navigation.getParam("isFav");
+TempleDetailScreen.navigationOptions = (navigationData) => {
+  const templeId = navigationData.navigation.getParam("templeId");
+  const templeTitle = navigationData.navigation.getParam("templeTitle");
+  const toggleFavorite = navigationData.navigation.getParam("toggleFav");
+  const isFavorite = navigationData.navigation.getParam("isFav");
 
-//   //const selectedtemple = templeS.find((temple) => temple.id === templeId);
-//   return {
-//     headerTitle: templeTitle,
-//     headerRight: (
-//       <HeaderButtons HeaderButtonComponent={HeaderButton}>
-//         <Item
-//           title="Favorite"
-//           iconName={isFavorite ? "ios-star" : "ios-star-outline"}
-//           onPress={toggleFavorite}
-//         />
-//       </HeaderButtons>
-//     ),
-//   };
-// };
+  //const selectedtemple = templeS.find((temple) => temple.id === templeId);
+  return {
+    headerTitle: templeTitle,
+    headerRight: (
+      <HeaderButtons HeaderButtonComponent={HeaderButton}>
+        <Item
+          title="Favorite"
+          iconName={isFavorite ? "ios-star" : "ios-star-outline"}
+          onPress={toggleFavorite}
+        />
+      </HeaderButtons>
+    ),
+  };
+};
 
 const styles = StyleSheet.create({
   container: {
