@@ -1,18 +1,7 @@
 import React, { useState } from "react";
 import { CATEGORIES } from "../data/dummy-data";
 
-import CategoriesScreen from "../screens/CategoriesScreen";
-import MusicScreen from "../screens/MusicScreen";
-
-import {
-  TouchableOpacity,
-  StyleSheet,
-  FlatList,
-  View,
-  Image,
-} from "react-native";
-
-import { SearchBar } from "react-native-elements";
+import { TouchableOpacity, StyleSheet, View } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
 
@@ -28,18 +17,6 @@ import Drawer2 from "./Drawer2";
 const Tab = createMaterialTopTabNavigator();
 
 const TopNavigation = (props) => {
-  const [categories, setFilterCategory] = useState(CATEGORIES);
-
-  const filterCategory = (text) => {
-    const newData = CATEGORIES.filter((item) => {
-      const itemData = `${item.title.toUpperCase()}`;
-      const textData = text.toUpperCase();
-      return itemData.indexOf(textData) > -1;
-    });
-
-    setFilterCategory(newData);
-  };
-
   return (
     <View style={{ flex: 1 }}>
       <NavigationContainer>
@@ -68,18 +45,6 @@ const TopNavigation = (props) => {
 };
 
 TopNavigation.navigationOptions = (navData) => {
-  const filterCategory = (text) => {
-    const newData = CATEGORIES.filter((item) => {
-      const itemData = `${item.title.toUpperCase()}`;
-      const textData = text.toUpperCase();
-      return itemData.indexOf(textData) > -1;
-    });
-
-    return newData;
-
-    //setFilterCategory(newData);
-  };
-
   return {
     headerTitle: "",
     headerStyle: {
